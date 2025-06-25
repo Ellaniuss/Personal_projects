@@ -1,0 +1,7 @@
+greenlet==3.2.2
+mariadb==1.1.12
+mysql-connector-python==9.3.0
+packaging==25.0
+python-dotenv==1.1.0
+SQLAlchemy==2.0.41
+typing_extensions==4.13.2
