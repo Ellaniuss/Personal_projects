@@ -1,6 +1,6 @@
 from db_config import DATABASE_URL
 
-from sqlalchemy import create_engine, Integer, String, Float, Column, Date, ForeignKey
+from sqlalchemy import create_engine, Integer, String, Float, Column, Date, ForeignKey, Boolean
 from sqlalchemy.orm import sessionmaker, relationship, declarative_base, foreign
 
 engine = create_engine(DATABASE_URL, echo=True)
@@ -15,9 +15,9 @@ class Grocery(Base):
     bought_date = Column(Date, nullable=False)
     sold_date = Column(Date, nullable=False)
     expiration_date = Column(Date, nullable=True)
-    location_id = Column(String(30)
+    location_id = Column(String)
     is_consumed = Column(Boolean, nullable=False)
-    notes = Column(Text)
+    notes = Column(String(255))
     product = relationship("Product", back_populates="groceries")
     unit = relationship("Unit", back_populates="groceries_unit")
     location = relationship("Location", back_populates="groceries")
@@ -26,11 +26,11 @@ class Product(Base):
     __tablename__ = "products"
     item_id = Column(Integer, primary_key=True, autoincrement=True)
     product_name = Column(String(255), nullable=False)
-    category_id = Column(String(30), ForeignKey("categories.category_id") nullable=False)
+    category_id = Column(String(30), ForeignKey("categories.category_id"), nullable=False)
     default_unit_id = Column(Integer, ForeignKey("units.unit_id"), nullable=False)
     default_quantity = Column(Integer, nullable=False)
     average_price = Column(Float, nullable=False)
-    notes = Column(Text)
+    notes = Column(String(255))
 
     category = relationship("Category", back_populates="products")
     default_unit = relationship("Unit", back_populates="product_default_unit")
@@ -60,13 +60,6 @@ class Unit(Base):
     product_default_unit = relationship("Product", back_populates="default_unit")
     groceries_unit = relationship("Grocery", back_populates="unit")
 
-
-
-
-
-
-
-
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -75,6 +68,6 @@ session = Session()
 # new_item = Item(name='Bread', quantity=1, place='Shelf')
 
 
-session.add(new_item)
+# session.add(new_item)
 session.commit()
 
