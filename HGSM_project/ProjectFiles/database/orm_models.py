@@ -1,4 +1,9 @@
-from db_config import DATABASE_URL
+'''
+I have to fix relationships in orm_models tables and then I can try new_item.py with adding new item into Category table
+'''
+
+
+from .db_config import DATABASE_URL
 
 from sqlalchemy import create_engine, Integer, String, Float, Column, Date, ForeignKey, Boolean
 from sqlalchemy.orm import sessionmaker, relationship, declarative_base, foreign
@@ -9,18 +14,17 @@ Base = declarative_base()
 class Grocery(Base):
     __tablename__ = "groceries"
     item_id = Column(Integer, primary_key=True, autoincrement=True)
-    product_id = Column(Integer, foreign_key=True)
+    product_id = Column(Integer, ForeignKey("products.item_id"), nullable=False)
     quantity = Column(Integer, nullable=False)
-    unit_id = Column(Integer, nullable=False)
+    unit_id = Column(Integer, ForeignKey("units.unit_id"), nullable=False)
     bought_date = Column(Date, nullable=False)
-    sold_date = Column(Date, nullable=False)
     expiration_date = Column(Date, nullable=True)
-    location_id = Column(String)
+    location_id = Column(String, ForeignKey("locations.location_id"), nullable=False)
     is_consumed = Column(Boolean, nullable=False)
     notes = Column(String(255))
+# I have to finish learning how to create relationships between tables
     product = relationship("Product", back_populates="groceries")
-    unit = relationship("Unit", back_populates="groceries_unit")
-    location = relationship("Location", back_populates="groceries")
+    unit = relationship("Unit", back_populates="units")
 
 class Product(Base):
     __tablename__ = "products"
