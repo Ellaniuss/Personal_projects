@@ -23,8 +23,7 @@ class Grocery(Base):
     is_consumed = Column(Boolean, nullable=False)
     notes = Column(String(255))
 # I have to finish learning how to create relationships between tables
-    product = relationship("Product", back_populates="groceries")
-    unit = relationship("Unit", back_populates="units")
+
 
 class Product(Base):
     __tablename__ = "products"
