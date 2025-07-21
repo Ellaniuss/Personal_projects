@@ -1,14 +1,10 @@
-'''
-I have to fix relationships in orm_models tables and then I can try new_item.py with adding new item into Category table
-'''
-
 
 from .db_config import DATABASE_URL
 
 from sqlalchemy import create_engine, Integer, String, Float, Column, Date, ForeignKey, Boolean
 from sqlalchemy.orm import sessionmaker, relationship, declarative_base, foreign
 
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 
 class Grocery(Base):
@@ -27,8 +23,6 @@ class Grocery(Base):
     #unit = relationship("Unit", back_populates="groceries")
     #locations = relationship("Location", back_populates="groceries")
 
-
-
 class Product(Base):
     __tablename__ = "products"
     item_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -46,7 +40,7 @@ class Product(Base):
 class Category(Base):
     __tablename__ = "categories"
     category_id = Column(Integer, primary_key=True, autoincrement=True)
-    category_name = Column(String(255), nullable=False)
+    category_name = Column(String(255), nullable=False, unique=True)
 
     #products = relationship("Product", back_populates="category")
 
@@ -67,10 +61,16 @@ class Unit(Base):
     #products = relationship("Product", back_populates="units")
     #groceries = relationship("Grocery", back_populates="unit")
 
+# class Item(Base):
+#     __tablename__ = "shopping_list"
+#     item_id = Column(Integer, primary_key=True, autoincrement=True)
+#     product_id = Column(Integer, ForeignKey("products.item_id", ondelete="CASCADE"), nullable=False)
+#     quantity = Column(Integer, nullable=False)
+#     unit = Column(String)
+
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
 
 session.commit()
-
