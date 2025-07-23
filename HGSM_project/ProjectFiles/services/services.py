@@ -37,8 +37,12 @@ class CategoryService:
             print(f"Successfully removed category with ID {category_id}")
             return True
 
-class ShoppingListService:
-    pass
+# class ShoppingListService:
+#     def __init__(self, session_creator):
+#         self.session_creator = session_creator
+#
+#     def add_item(self, ):
+#     pass
 
 
 
