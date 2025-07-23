@@ -1,11 +1,12 @@
-
 from .db_config import DATABASE_URL
 
 from sqlalchemy import create_engine, Integer, String, DECIMAL, Column, DateTime, ForeignKey, Boolean, func
-from sqlalchemy.orm import sessionmaker, relationship, declarative_base, foreign
+from sqlalchemy.orm import sessionmaker, relationship, declarative_base
 
 engine = create_engine(DATABASE_URL)
 Base = declarative_base()
+
+Session = sessionmaker(bind=engine)
 
 class Category(Base):
     __tablename__ = "categories"
@@ -73,8 +74,4 @@ class Item(Base):
     unit = relationship("Unit")
 
 Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
-session = Session()
 
-
-session.commit()
