@@ -1,0 +1,11 @@
+location_name;location_type
+location_name;location_type
+fridge;cold storage
+freezer;cold storage
+pantry;dry storage
+spice cabinet;dry storage
+shelf cabinet a;dry storage
+shelf cabinet b;dry storage
+shelf cabinet c;non-food
+bathroom;bathroom
+cleaning cabinet;house & cleaning
