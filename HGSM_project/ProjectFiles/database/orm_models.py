@@ -1,72 +1,76 @@
 
 from .db_config import DATABASE_URL
 
-from sqlalchemy import create_engine, Integer, String, Float, Column, Date, ForeignKey, Boolean
+from sqlalchemy import create_engine, Integer, String, DECIMAL, Column, DateTime, ForeignKey, Boolean, func
 from sqlalchemy.orm import sessionmaker, relationship, declarative_base, foreign
 
 engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 
-class Grocery(Base):
-    __tablename__ = "groceries"
-    item_id = Column(Integer, primary_key=True, autoincrement=True)
-    product_id = Column(Integer, ForeignKey("products.item_id", ondelete="CASCADE"), nullable=False)
-    quantity = Column(Integer, nullable=False)
-    unit_id = Column(Integer, ForeignKey("units.unit_id", ondelete="CASCADE"), nullable=False)
-    bought_date = Column(Date, nullable=False)
-    expiration_date = Column(Date, nullable=True)
-    location_id = Column(Integer, ForeignKey("locations.location_id", ondelete="CASCADE"), nullable=False)
-    is_consumed = Column(Boolean, nullable=False)
-    notes = Column(String(255))
-
-    #product = relationship("Product", back_populates="groceries")
-    #unit = relationship("Unit", back_populates="groceries")
-    #locations = relationship("Location", back_populates="groceries")
-
-class Product(Base):
-    __tablename__ = "products"
-    item_id = Column(Integer, primary_key=True, autoincrement=True)
-    product_name = Column(String(255), nullable=False)
-    category_id = Column(Integer, ForeignKey("categories.category_id"), nullable=False)
-    default_unit_id = Column(Integer, ForeignKey("units.unit_id"), nullable=False)
-    default_quantity = Column(Integer, nullable=False)
-    average_price = Column(Float, nullable=False)
-    notes = Column(String(255))
-
-   #groceries = relationship("Grocery", back_populates="product")
-    #category = relationship("Category", back_populates="products")
-    #deafult_unit = relationship("Unit", back_populates="products")
-
 class Category(Base):
     __tablename__ = "categories"
-    category_id = Column(Integer, primary_key=True, autoincrement=True)
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     category_name = Column(String(255), nullable=False, unique=True)
-
-    #products = relationship("Product", back_populates="category")
-
-class Location(Base):
-    __tablename__ = "locations"
-    location_id = Column(Integer, primary_key=True, autoincrement=True)
-    location_name = Column(String(255), nullable=False)
-    location_type = Column(String(30), nullable=False)
-
-    #groceries = relationship("Grocery", back_populates="locations")
 
 class Unit(Base):
     __tablename__ = "units"
-    unit_id = Column(Integer, primary_key=True, autoincrement=True)
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     unit_name = Column(String(255), nullable=False)
-    unit_abbreviation = Column(String(10), nullable=False)
+    unit_abbreviation = Column(String(10), nullable=False, unique=True)
 
-    #products = relationship("Product", back_populates="units")
-    #groceries = relationship("Grocery", back_populates="unit")
+class Location(Base):
+    __tablename__ = "locations"
 
-# class Item(Base):
-#     __tablename__ = "shopping_list"
-#     item_id = Column(Integer, primary_key=True, autoincrement=True)
-#     product_id = Column(Integer, ForeignKey("products.item_id", ondelete="CASCADE"), nullable=False)
-#     quantity = Column(Integer, nullable=False)
-#     unit = Column(String)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    location_name = Column(String(255), nullable=False)
+    location_type = Column(String(30), nullable=False)
+
+class Product(Base):
+    __tablename__ = "products"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    product_name = Column(String(30), nullable=False)
+    category_id = Column(Integer, ForeignKey("categories.id", ondelete="SET NULL"), nullable=True)
+    default_unit_id = Column(Integer, ForeignKey("units.id"), nullable=False)
+    default_quantity = Column(Integer, nullable=False)
+    average_price = Column(DECIMAL(10,2), nullable=False)
+    notes = Column(String(255))
+
+    category = relationship("Category")
+    default_unit = relationship("Unit")
+
+class Grocery(Base):
+    __tablename__ = "groceries"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    product_id = Column(Integer, ForeignKey("products.id", ondelete="CASCADE"), nullable=False)
+    quantity = Column(Integer, nullable=False, default=1)
+    unit_id = Column(Integer, ForeignKey("units.id", ondelete="CASCADE"), nullable=False)
+    bought_date = Column(DateTime)
+    expiration_date = Column(DateTime)
+    location_id = Column(Integer, ForeignKey("locations.id", ondelete="CASCADE"), nullable=False)
+    is_consumed = Column(Boolean, nullable=False)
+    notes = Column(String(255))
+
+    product = relationship("Product")
+    unit = relationship("Unit")
+    location = relationship("Location")
+
+class Item(Base):
+    __tablename__ = "shopping_list"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    quantity = Column(Integer, nullable=False, default=1)
+    unit = Column(String)
+    unit_id = Column(Integer, ForeignKey("units.id"), nullable=False)
+    added_time = Column(DateTime, default=func.now())
+    purchased = Column(Boolean, nullable=False, default=False,)
+    purchased_time = Column(DateTime)
+    removed = Column(Boolean, nullable=False, default=False)
+
+    product = relationship("Product")
+    unit = relationship("Unit")
 
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
