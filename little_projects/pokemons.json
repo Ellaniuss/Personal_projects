@@ -1,0 +1,47 @@
+[
+    {
+        "Name": "bulbasaur",
+        "Height": 7,
+        "Weight": 69,
+        "Abilities": [
+            "overgrow",
+            "chlorophyll"
+        ]
+    },
+    {
+        "Name": "ivysaur",
+        "Height": 10,
+        "Weight": 130,
+        "Abilities": [
+            "overgrow",
+            "chlorophyll"
+        ]
+    },
+    {
+        "Name": "venusaur",
+        "Height": 20,
+        "Weight": 1000,
+        "Abilities": [
+            "overgrow",
+            "chlorophyll"
+        ]
+    },
+    {
+        "Name": "charmander",
+        "Height": 6,
+        "Weight": 85,
+        "Abilities": [
+            "blaze",
+            "solar-power"
+        ]
+    },
+    {
+        "Name": "charmeleon",
+        "Height": 11,
+        "Weight": 190,
+        "Abilities": [
+            "blaze",
+            "solar-power"
+        ]
+    }
+]
